@@ -78,22 +78,41 @@ class scoreBoard:
         self.score += 10
         self.id = canvas.create_text(50,470,text = f'Score: {self.score}', fill = "green" , font=(14))
 
+def newGame(evt):
+    global gameOver, tk
+    tk.destroy()
+    gameOver = False
 
 
-tk = Tk()
-tk.title("Game")
-tk.resizable(0, 0)
-tk.wm_attributes("-topmost", 1)
-canvas = Canvas(tk, width=500, height=500, bd=0, highlightthickness=0, bg='black')
-canvas.pack()
-tk.update()
-paddle = Paddle(canvas, 'blue')
-score = scoreBoard(canvas)
-ball = Ball(canvas, paddle, score, 'red')
+
+
+
 while 1:
-    if ball.hit_bottom == False:
-        ball.bounce()
-        paddle.bounce()
-        tk.update_idletasks()
-        tk.update()
-    sleep(0.01)
+    gameOver = True
+    tk = Tk()
+    tk.title("Game")
+    tk.resizable(0, 0)
+    tk.wm_attributes("-topmost", 1)
+    canvas = Canvas(tk, width=500, height=500, bd=0, highlightthickness=0, bg='black')
+    canvas.pack()
+    tk.update()
+    paddle = Paddle(canvas, 'blue')
+    score = scoreBoard(canvas)
+    ball = Ball(canvas, paddle, score, 'red')
+    while gameOver:
+        if ball.hit_bottom == False:
+            ball.bounce()
+            paddle.bounce()
+            tk.update_idletasks()
+            tk.update()
+        else:
+            canvas.delete(ball.id)
+            canvas.delete(paddle.id)
+            canvas.create_text(250,200, text = 'GAME OVER', font=('Lucida sans',50), fill ='red')
+            canvas.create_text(250,300, text = 'press any key to continue', font=('Lucida sans',20), fill ='red')
+            canvas.bind_all('<KeyPress>', newGame)
+            tk.update_idletasks()
+            tk.update()
+        sleep(0.01)
+
+
